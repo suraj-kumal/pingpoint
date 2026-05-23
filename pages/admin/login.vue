@@ -53,8 +53,7 @@ const handleLogin = async () => {
             },
         });
 
-        successMessage.value =
-            response.message || "Login successful. Redirecting...";
+        successMessage.value = "Login successful. Redirecting...";
 
         setTimeout(() => {
             navigateTo("dashboard");
