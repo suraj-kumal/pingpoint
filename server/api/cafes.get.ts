@@ -2,6 +2,8 @@ import { db } from "~/server/db";
 
 import { cafes } from "~/server/db/schema";
 
+import { eq } from "drizzle-orm";
+
 export default defineEventHandler(async (event) => {
   try {
     //get query paramete
@@ -13,7 +15,22 @@ export default defineEventHandler(async (event) => {
 
     const offset = (page - 1) * limit;
 
-    const cafesData = await db.select().from(cafes).limit(limit).offset(offset);
+    const cafesData = await db
+      .select({
+        id: cafes.id,
+        name: cafes.name,
+        slug: cafes.slug,
+        city: cafes.city,
+        location: cafes.location,
+        coverImage: cafes.coverImage,
+        excerpt: cafes.excerpt,
+        createdAt: cafes.createdAt,
+      })
+      .from(cafes)
+      .where(eq(cafes.isPublished, true))
+      .limit(limit)
+      .offset(offset);
+
     return {
       cafesData,
       page,
