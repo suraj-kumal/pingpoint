@@ -7,19 +7,19 @@
 </template>
 
 <script setup>
+const { fetch: refreshSession } = useUserSession();
+
 const handleLogout = async () => {
     try {
-        const { data, error } = await useFetch("/api/adminlogout", {
+        await $fetch("/api/adminlogout", {
             method: "POST",
         });
 
-        if (data.value?.success) {
-            await navigateTo("/admin/login");
-        }
+        // refresh reactive auth state
+        await refreshSession();
 
-        if (error.value) {
-            console.error(error.value);
-        }
+        // redirect
+        await navigateTo("/admin/login");
     } catch (err) {
         console.error(err);
     }
